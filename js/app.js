@@ -1,3 +1,4 @@
+let notes=[];
 const btn=document.querySelector("button");
 
 btn.addEventListener("click", () => {
@@ -22,7 +23,10 @@ btn.addEventListener("click", () => {
     
     editTag.addEventListener("click", () => {
         const inputTag= editTag.parentElement.previousSibling;
-        
+        // const prevValue= inputTag.value;
+        // inputTag.focus();
+        // const noteLocal= JSON.parse(localStorage.getItem("notes"));
+        // console.log(noteLocal)
     })
     
     deleteTag.addEventListener("click", () => {
@@ -30,6 +34,13 @@ btn.addEventListener("click", () => {
         divParent.parentElement.remove();
     })
 
+    inputEL.addEventListener("change", () => {
+        notes= [...notes, inputEL.value];
+        localStorage.setItem("notes", JSON.stringify(notes))
+    })
+
 })
+
+
 
 
