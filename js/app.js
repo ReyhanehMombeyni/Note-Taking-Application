@@ -1,4 +1,6 @@
 let notes=[];
+localStorage.setItem("notes", JSON.stringify(notes))
+let prevValue;
 const btn=document.querySelector("button");
 
 btn.addEventListener("click", () => {
@@ -9,6 +11,7 @@ btn.addEventListener("click", () => {
 
     const inputEL=document.createElement("input");
     inputEL.type="text";
+    inputEL.focus();
     inputEL.classList.add("inputItem");
     const divEL=document.createElement("div");
     divEL.classList.add("icons");
@@ -23,20 +26,52 @@ btn.addEventListener("click", () => {
     
     editTag.addEventListener("click", () => {
         const inputTag= editTag.parentElement.previousSibling;
-        // const prevValue= inputTag.value;
-        // inputTag.focus();
-        // const noteLocal= JSON.parse(localStorage.getItem("notes"));
-        // console.log(noteLocal)
+        prevValue= inputTag.value;
+        inputTag.focus();
     })
+        
     
     deleteTag.addEventListener("click", () => {
         const divParent= editTag.parentElement;
         divParent.parentElement.remove();
+
+
+        const noteLocal= JSON.parse(localStorage.getItem("notes"));
+        const inputTag= editTag.parentElement.previousSibling;
+        let filterNoteLocal= noteLocal.filter(item => item!=inputTag.value)
+        localStorage.setItem("notes", JSON.stringify(filterNoteLocal))
+
     })
 
+
     inputEL.addEventListener("change", () => {
-        notes= [...notes, inputEL.value];
+        const noteLocal= JSON.parse(localStorage.getItem("notes"));
+
+        if(noteLocal.length) {
+            let mapNoteLocal=[];
+            let exist=false;
+            mapNoteLocal= noteLocal.map(item => {
+                if(item===prevValue) {
+                    exist=true;
+                    return inputEL.value;
+                }
+                else {
+                    return item;
+                }
+            })
+            if (!exist) {
+                notes= [...notes, inputEL.value];
+            }
+            else {
+                notes= mapNoteLocal;
+            }
+        }
+        else {
+            notes= [inputEL.value];
+        }
+
         localStorage.setItem("notes", JSON.stringify(notes))
+
     })
 
 })
